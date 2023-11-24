@@ -1,0 +1,76 @@
+menu das opcoes para a aplicacao de gerencia de financas
+
+requisitos funcionais : 
+
+1.lancar pagamentos para contas pre criadas ou para pagamentos avulsos
+2. sessao que cria contas, ou seja, contas fixas para todos os meses
+3.acessar historico de pagamentos
+4.possibilitar visualizar a carteira e atualizar o saldo para apenas mostrando inicialmente o salario
+5.possibilidade de adicionar cartao de credito para visualizar o limite disponivel sempre e isso so sera possivel pois ao fazer um pagamento, será escolhida a forma para tal (cartao de credito, debito ou em especie)
+6. pesquisar dentro do historico de pagamentos para requisitar um em especifico
+7. no historico de pagamentos ser possivel visualizar o pagamentos feitos em cada mês
+
+para fazer pagamentos eu preciso que o valor da conta a ser paga condiza com o valor do pagamento para que ele seja feito com sucesso...
+
+ouseja, um pagamento tem que estar linkado a uma conta quando ele for lancado para que essa conta seja ou 'excluida' no caso seja paga...
+
+caso a conta nao exista
+
+ele vai perguntar qual conta q o usuario vai lancar o pagamento e se caso nao for nenhuma das contas que estao registradas como padroes do mes
+
+ele vai ter que criar uma conta e ai o usuario vai decidir se vai dividir a compra ou vai direto com o debito e ai ele informar qual o valor da conta 
+
+e imediatamente ele vai retirar o valor da conta, fazer o devbito ou por partes se for em credito, entao a conta tera duas propiedades o valor total e o valor atual, se for sendo debitada aos poucos, o valor vai caindo e vai sendo atualizado no frontend
+
+
+tem que ser possivel registrar um cartao na aplicacao tambem, informar quanto tem no cartao e quanto é o limite para que nao exceda...
+
+
+tabela dos cartoes --> 
+
+create table cards if not exists (
+    id int primary key auto_increments not null ,
+    card_name varchar(50),
+    created_at datetime
+)
+
+// preciso criar uma table para linkar varias pessoas a varios cartoes, e visse versa
+
+
+create table cards_has_users(
+    id auto_increments primary key not null,
+    user_id references id inTable users --knex code to make an foreign key to reference in other table the id,
+    card_id references id inTable Cards not null
+
+)
+
+create table bills(
+    id int primary key auto_increments not null,
+    title varchar(50) not nul,
+    description varchar(450),
+    value varchar(10) not null,
+    venc_date datetime
+    created_by int references id inTable users
+    created_at datetime,
+    updated_at datetime //when the bill suffering an payment, this have to be updated in db and in the frontend 
+)
+
+create table users_has_bills if not exists(
+    id primary key auto_increments not null,
+    user_id int references id inTable users
+    bill_id int references id  inTable bills
+
+)
+
+precisarei de uma table com o tipo de cartao tambem, caso seja debito ele deve possuir o dia de vencimento do mes e o limite
+
+a ideia eh fazer que cartoes possam ser compartilhados e contas tambem, ou seja, quando uma conta for compartilhada, amigos podem ajudar a pagar
+
+ou seja, a conta tera o dado que informa por quem que foi criada, mas os usuarios que nao possuirem este dado, serao convidados
+
+
+para saber quem sao os donos do cartao, eu vou terq fazer um innerJoin para retornar os cartoes que estao em cards_has_users onde o id daquele cartao que esta sendo pesquidado condiz com o id do user linkado, como podem haver varios registros, varios usuarios podem estar linkados a este cartao em especifico
+
+/*****************/******************/
+
+preciso organizar como os controllers irao fazer requisicoes utilizando dos meus repositories dentro de service especificado
