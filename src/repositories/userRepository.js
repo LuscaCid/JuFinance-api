@@ -2,13 +2,11 @@ const knex = require('../database/knex')
 const AppError = require('../utils/AppError')
 
 
-class userRepository {
+class UserRepository {
     async findByEmail(email) {
         const userExists = await knex('users')
         .where({email})
         .first()
-        
-        if(userExists) throw new AppError('Este e-mail já está cadastrado.',401)
     
         return userExists
     }
@@ -25,4 +23,4 @@ class userRepository {
 
 }
 
-module.exports = userRepository
+module.exports = UserRepository

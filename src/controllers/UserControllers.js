@@ -11,13 +11,13 @@ class UserControllers{
     }
     async create(request, response, next){
         const {name, email, password } = request.body
-        
+         
         const userRepository = new UserRepository()
         const userCreateService = new UserCreateServices(userRepository)
         
-        userCreateService.execute({name, email, password})
+        const {id} = await userCreateService.execute({name, email, password})
 
-        return response.status(201).json({message : "User has been registered"})
+        return response.status(201).json({message : "User has been registered", id})
     }
 
 }
