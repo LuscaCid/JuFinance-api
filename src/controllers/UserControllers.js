@@ -1,6 +1,8 @@
-const userRepository = require('../repositories/userRepository')
+const userRepository = require('../repositories/user-test-prod/userRepository')
 const UserCreateServices = require('../services/UserCreateService')
-const UserRepository = require('../repositories/userRepository')
+const UserRepository = require('../repositories/user-test-prod/userRepository')
+const UserRepositoryArray = require('../repositories/user-test-prod/UserRepositoryArray')
+
 
 class UserControllers{
     async test(req, res){
@@ -15,9 +17,10 @@ class UserControllers{
         const userRepository = new UserRepository()
         const userCreateService = new UserCreateServices(userRepository)
         
-        const {id} = await userCreateService.execute({name, email, password})
+        const users = await userCreateService.execute({name, email, password})
+        
 
-        return response.status(201).json({message : "User has been registered", id})
+        return response.status(201).json({message : "User has been registered", users})
     }
 
 }

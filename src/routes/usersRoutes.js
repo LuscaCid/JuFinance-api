@@ -10,5 +10,6 @@ userRoutes.use(express.json())
 
 userRoutes.get('/test', userControllers.test)
 
+userRoutes.post('/register', userControllers.create)
 
 module.exports = userRoutes
