@@ -1,0 +1,5 @@
+#routes of application
+
+to register an new user
+
+post /baseURL/users/register

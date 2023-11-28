@@ -9,6 +9,8 @@ const BillsRoutes = express()
 
 BillsRoutes.use(express.json())
 
+BillsRoutes.get('/show', ensureAuthenticated.EnsureAuthenticated, billsControllers.showAll)
+
 BillsRoutes.post('/create', ensureAuthenticated.EnsureAuthenticated,billsControllers.create)
 
 module.exports = BillsRoutes

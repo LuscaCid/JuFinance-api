@@ -11,7 +11,7 @@ class UserRepository {
     }
     async create({name, email, password}){
         const hashedPassword = await hash(password , 8)
-        const userId = await knex('users')
+        const [userId] = await knex('users')
         .insert({
             name,
             email,
