@@ -33,12 +33,68 @@ class BillsControllers {
         return response.status(201).json(billId)
     }
 
-    async showAll(request, response){
+    async update(request, response) {
+        const {id} = request.params
+        console.log(id)
+
+        const {
+            newTitle,
+            newDescription,
+            newValue
+        } = request.body
+        
+        if(newTitle){
+            try{
+                await knex('bills')
+                .where({id : id})
+                .update({
+                    title : newTitle,
+                })
+            } catch (err){
+                console.error(err)
+            }
+            
+        } 
+        
+        if(newDescription){
+            try{
+                await knex('bills')
+                .where({id})
+                .update({
+                    description : newDescription,
+                }) 
+            } catch (err){
+                console.error(err)
+            }     
+        }
+        
+        if(newValue){
+            try {
+                await knex('bills')
+                .where({id})
+                .update({
+                    value : newValue,
+                })
+            } catch (err){
+                console.error(err)
+            }      
+        }
+        
+        return response.status(200).json({
+            message : "update with success"
+            
+        })
+            
+    }   
+
+    async showAll(request, response){ // when the user searches too
         const user_id = request.user.id 
+        const {search} = request.body
         try{
             const userBills = await knex('bills')
             .select(['title' , 'value','description', 'name'])
             .where({created_by : user_id})
+            .whereLike('title', `%${search}%`)
             .innerJoin("users" , "bills.created_by", "users.id")
             .orderBy('title')
 
@@ -46,7 +102,8 @@ class BillsControllers {
                 return {
                     created_by : element.name,
                     title : element.title,
-                    
+                    value : element.value,
+                    created_at : element.created_at
 
                 }
             })

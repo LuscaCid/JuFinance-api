@@ -11,6 +11,8 @@ BillsRoutes.use(express.json())
 
 BillsRoutes.get('/show', ensureAuthenticated.EnsureAuthenticated, billsControllers.showAll)
 
+BillsRoutes.put('/update/:id', ensureAuthenticated.EnsureAuthenticated, billsControllers.update)
+
 BillsRoutes.post('/create', ensureAuthenticated.EnsureAuthenticated,billsControllers.create)
 
 module.exports = BillsRoutes
