@@ -87,6 +87,20 @@ class BillsControllers {
             
     }   
 
+    async deleteOwnBill(req,res){
+        const {id} = req.body
+        try{
+            await knex('bills')
+            .where({id})
+            .delete()
+            return res.status(200).json({message : "deleted with success"})
+        
+        } catch (err){
+            return res.status(err.status).json({message : err})
+        }
+
+    }
+
     async showAll(request, response){ // when the user searches too
         const user_id = request.user.id 
         const {search} = request.body
