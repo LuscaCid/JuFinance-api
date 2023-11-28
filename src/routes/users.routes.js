@@ -10,7 +10,6 @@ const userRoutes = express()
 
 userRoutes.use(express.json())
 
-userRoutes.get('/test', userControllers.test)
 
 userRoutes.put('/update', ensureAuth.EnsureAuthenticated,userControllers.update)
 

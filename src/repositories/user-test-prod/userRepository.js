@@ -30,47 +30,55 @@ class UserRepository {
         oldPassword,
         newPassword
     }){
-        
         const updateName = async () => {
-            console.log('updatename')
             try{
                 await knex('users')
                 .where({id : user_id})
                 .update({name : newName})
             } catch (err){
-                console.err(err)
+                console.error(err)
             }
         }
 
         const updateEmail = async () => {
             try{
+
+                const emailExists = await knex('users')
+                .where({email : newEmail})
+                .first()
+
+                if(emailExists)throw new AppError('E-mail já cadastrado.')
+
                 await knex('users')
                 .where({id : user_id})
                 .update({email : newEmail})
             } catch (err){
-                console.err(err)
+                console.error(err)
             }
         }
 
         const updatePassword = async () => {
-
+            console.log('update password')
             const user = await knex('users')
             .where({id : user_id})
+            .first()
 
-            const checkedPassword = await compare(oldPassword , user.password)
+            const checkedPassword = await compare(oldPassword,user.password)
             console.log(checkedPassword)//only for see the results
             if(!checkedPassword) throw new AppError('Senha inválida', 401)
+
+            const hashedPassword = await hash(newPassword, 8)
 
             try{
                 await knex('users')
                 .where({id : user_id})
-                .update({password : newPassword})
+                .update({password : hashedPassword})
             } catch (err){
-                console.err(err)
+                console.error(err)
             }
         }
         
-        return{
+        return {
             updateName,
             updateEmail,
             updatePassword
