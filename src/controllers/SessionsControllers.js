@@ -8,7 +8,7 @@ class SessionsControllers{
     async create(request, response){
         const {email, password} = request.body
 
-        const sessionsRepository = new SessionsRepositoryTest()
+        const sessionsRepository = new SessionsRepository()
         const SessionsCreateService = new SessionsCreateSevice(sessionsRepository)
 
         const {user, token} = await SessionsCreateService.execute({email, password})
