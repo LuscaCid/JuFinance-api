@@ -8,7 +8,7 @@ class EnsureAuth{
 
         if(!AuthHeaders)throw new AppError('Jwt dont passed', 401)
         const [, token] = AuthHeaders.split(' ')
-
+        console.log(token)
         try {
             const {sub : user_id} = verify(token, AuthConfig.jwt.secret )
             request.user = {
