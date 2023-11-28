@@ -14,7 +14,7 @@ class EnsureAuth{
             request.user = {
                 id: Number(user_id),
             }
-            console.log('chegou aqui')
+            
             return next()
         } catch {
             throw new AppError('invalid jwt')

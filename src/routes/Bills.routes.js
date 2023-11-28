@@ -1,6 +1,9 @@
 const express = require('express')
+
 const BillsControllers = require('../controllers/billsControllers')
+
 const billsControllers = new BillsControllers()
+
 const EnsureAuth = require('../middleware/EnsureAuth')
 
 const ensureAuthenticated = new EnsureAuth()

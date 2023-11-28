@@ -55,7 +55,7 @@ class BillsControllers {
             }
             
         } 
-        
+
         if(newDescription){
             try{
                 await knex('bills')
@@ -79,12 +79,7 @@ class BillsControllers {
                 console.error(err)
             }      
         }
-        
-        return response.status(200).json({
-            message : "update with success"
-            
-        })
-            
+        return response.status(200).json({message : "update with success"})
     }   
 
     async deleteOwnBill(req,res){
