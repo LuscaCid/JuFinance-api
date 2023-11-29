@@ -5,7 +5,6 @@ const EnsureAuthenticated = require('../middleware/EnsureAuth')
 const ensureAuth = new EnsureAuthenticated()
 const cardsControllers = new CardsControllers()
 
-
 /**
  * acima as importacoes e 
  */

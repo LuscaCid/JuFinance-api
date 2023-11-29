@@ -60,7 +60,7 @@ class CardsControllers {
             .where({id : card})
             .first()
 
-            if(userHavesCard.id != userUsing.id) throw new AppError('')
+            if(userHavesCard.id != userUsing.id) throw new AppError('Invalid access from this user')
 
             await knex('cards')
             .where({id  : card_id})
