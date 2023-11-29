@@ -2,4 +2,4 @@
 
 to register an new user
 
-post /baseURL/users/register
+post /baseURL/users/dddddwddwadfddd   
