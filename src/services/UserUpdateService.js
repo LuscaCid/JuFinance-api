@@ -9,7 +9,6 @@ class UserUpdateService{
         oldPassword,
         newPassword
     }){
-    console.log('chegou no execute')
     const functions = await this.userRepository.update({
         user_id,
         newName,
