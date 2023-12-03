@@ -20,6 +20,7 @@ app.use((error ,req, res, next) => {
             status : error.status
         })
     }
+    console.error(error)
     return res.status(500).json({
         message : "Internal server error",
         status : 500 

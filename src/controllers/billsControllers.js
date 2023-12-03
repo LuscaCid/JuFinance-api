@@ -10,11 +10,10 @@ class BillsControllers {
             title,
             description,
             value,
-            maturity,
-            
+            maturity,           
         } = request.body
         //const {id} = request.params
-        const userId = request.user.id
+        const userId = request.user.id //advindo da criacao la no ensureAuth, criando um objeto user dentro da request
         console.log(userId)
         const billId = await knex('bills')
         .insert({
@@ -69,7 +68,7 @@ class BillsControllers {
         }
         
         if(newValue){
-            try {
+            try {//treatment of errors
                 await knex('bills')
                 .where({id})
                 .update({
@@ -82,43 +81,46 @@ class BillsControllers {
         return response.status(200).json({message : "update with success"})
     }   
 
-    async deleteOwnBill(req,res){
-        const {id} = req.body
+
+    async deleteOwnBill(req,res){//an selected bill that will be deleted
+        const {bill_id} = req.body
         try{
             await knex('bills')
-            .where({id})
+            .where({id :bill_id})
             .delete()
             return res.status(200).json({message : "deleted with success"})
-        
         } catch (err){
-            return res.status(err.status).json({message : err})
+            return console.log(err)
         }
-
     }
 
-    async showAll(request, response){ // when the user searches too
+    async showAll(request, response){ // when the user searches also
         const user_id = request.user.id 
-        const {search} = request.body
+        let {search} = request.body
+        if(!search)search = ''
+
         try{
             const userBills = await knex('bills')
-            .select(['title' , 'value','description', 'name'])
+            .select('*')
             .where({created_by : user_id})
-            .whereLike('title', `%${search}%`)
+            .whereLike('title', `%${String(search)}%`)//search tava chegando como undefined
             .innerJoin("users" , "bills.created_by", "users.id")
             .orderBy('title')
 
-            const filteredUserBills = userBills.map(element => {
+            console.log(userBills)
+            const filteredUserBills = userBills.map(element => {//destruct -> ({name, title, value, created_at}) e so aloca <3
+            console.log(element)
                 return {
                     created_by : element.name,
                     title : element.title,
                     value : element.value,
-                    created_at : element.created_at
-
+                    created_at : element.created_at,
+                    maturity : element.maturity
                 }
             })
 
             console.log(filteredUserBills)
-            return response.status(200).json(userBills)
+            return response.status(200).json(filteredUserBills)
 
         } catch (err) {
             console.error(err)

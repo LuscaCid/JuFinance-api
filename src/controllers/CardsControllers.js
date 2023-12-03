@@ -8,20 +8,33 @@ const AppError = require('../utils/AppError')
  */
 class CardsControllers {
     
+    owners = async (req, res) => {
+        const {card_id} = req.body
+        const owners = await knex('users_has_cards')
+        .where({card_id })
+
+    }
+
     create = async (req, res) => {
         const { id } = req.user
         const {
-            initalValue,
+            initialValue,
             cardName, 
         } = req.body
         try{
             const cardId = await knex('cards')
             .insert({
-                balance : initalValue,
+                balance : initialValue,
                 card_name : cardName,
                 created_by  : id
-            }).then(e => console.log(e))
-
+            })
+            console.log(cardId)
+            const [card_id] = cardId 
+            await knex("cards_has_users")
+            .insert({
+                user_id : id,
+                card_id
+            }).then(() => (console.log('ok, created')))
             return res.status(201).json({
                 message : "card has been created with success",
                 card_id : cardId 
@@ -31,11 +44,13 @@ class CardsControllers {
         }
     }
 
-    viewAll  = async (req, res) => {
+    viewAll  = async (req, res) => {//sera possivel ter cartoes compartilhados dentro da aplicacao, contas tambem
         const user_id = req.user.id
 
-        const allCards = await knex('cards')
-        .where({created_by :  user_id})
+        const allCards = await knex('cards_has_users')
+        .select(["user_id", "card_id"])
+        .where({user_id})
+        .innerJoin('cards', "cards.created_by", "cards_has_users.user_id")
         .orderBy('card_name')
 
         return res.status(200).json(allCards)
@@ -78,7 +93,7 @@ class CardsControllers {
 
     delete = async (req, res) => {
         const user_id = req.user.id
-        const { card_id } = req.body
+        const { card_id } = req.body //id selecionado a partir do click no cartao...
 
         try {
 
@@ -103,7 +118,7 @@ class CardsControllers {
         }
         
         return res.status(200).json({
-            messagem : "okay",
+            message : "okay at changes!",
             
         })
     }

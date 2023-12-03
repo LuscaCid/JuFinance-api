@@ -18,7 +18,7 @@ BillsRoutes.put('/update/:id', ensureAuthenticated.EnsureAuthenticated, billsCon
 
 BillsRoutes.post('/create', ensureAuthenticated.EnsureAuthenticated,billsControllers.create)
 
-BillsRoutes.delete('/delete', ensureAuthenticated.EnsureAuthenticated, billsControllers.deleteOwnBill)
+BillsRoutes.delete('/remove', ensureAuthenticated.EnsureAuthenticated, billsControllers.deleteOwnBill)
 
 module.exports = BillsRoutes
 

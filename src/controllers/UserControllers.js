@@ -4,7 +4,6 @@ const UserUpdateServices = require('../services/UserUpdateService')
 
 const UserRepository = require('../repositories/user-test-prod/userRepository')
 const UserRepositoryArray = require('../repositories/user-test-prod/UserRepositoryArray')
-
 class UserControllers{
 
     async create(request, response, next){
@@ -15,7 +14,6 @@ class UserControllers{
         
         const user_id = await userCreateService.execute({name, email, password})
         
-
         return response.status(201).json({message : "User has been registered",user_id})
     }
     async update(request, response){
