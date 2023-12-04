@@ -1,9 +1,12 @@
 const userRepository = require('../repositories/user-test-prod/userRepository')
 const UserCreateServices = require('../services/UserCreateService')
 const UserUpdateServices = require('../services/UserUpdateService')
-
+const UserShareServices = require('../services/userShareService')
 const UserRepository = require('../repositories/user-test-prod/userRepository')
 const UserRepositoryArray = require('../repositories/user-test-prod/UserRepositoryArray')
+
+
+
 class UserControllers{
 
     async create(request, response, next){
@@ -39,7 +42,22 @@ class UserControllers{
         
         return response.status(200).json({message : "Usuário atualizado com sucesso"})
     }
-    
+    cardSharing = async (req, res) => {//thats will send an invitation
+        const {email_to, card_id} = req.body
+        const user_id = req.user.id 
+        //verify if this email exists
+        
+        const userRepository = new UserRepository()
+        const userShareService = new UserShareServices(userRepository)
+
+        userShareService.execute(user_id, {email_to, card_id})
+
+        try{
+                const userExists = await knexfile()
+        } catch (error){
+
+        }
+    }
 }
 
 module.exports = UserControllers

@@ -23,6 +23,24 @@ class UserRepository {
 
 
     //utilizando o conceito de factory juntamente com inversao de injecao de dependencias
+    
+    shareCard = async ({user, card_id}) => {
+        console.log(user)
+        try{
+            await knex('cards_has_users')
+            .insert({
+                card_id,
+                user_id : user.id
+            }).then(() => {
+                return "ok"
+            })
+        } catch (e) {
+            return console.error(e)
+        }
+    }
+    
+    
+    
     async update({
         user_id,
         newName,
