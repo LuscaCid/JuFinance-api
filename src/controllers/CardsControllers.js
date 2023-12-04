@@ -10,8 +10,23 @@ class CardsControllers {
     
     owners = async (req, res) => {
         const {card_id} = req.body
-        const owners = await knex('users_has_cards')
-        .where({card_id })
+        try{
+            const owners = await knex('cards_has_users')
+            .select('*')
+            .where({card_id })
+            .innerJoin('users', 'cards_has_users.user_id', "users.id")
+            .innerJoin('cards', 'cards.id', 'cards_has_users.card_id')
+            const filteredInfoFromOwners = owners.map(owner => (
+                {   
+                    card_owner : owner.name,
+                    card_name : owner.card_name,
+                }
+            ))
+
+            return res.status(200).json(filteredInfoFromOwners)
+        } catch (error){
+            console.error(error)
+        }
 
     }
 

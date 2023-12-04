@@ -1,5 +1,5 @@
 //a ideia eh trabalhar em cima da criacao de contas a pagar para em seguida fazer o pagamento das mesmas
-
+//poder compartilhar contas a serem pagas e ver o processo de pagamento.
 const knex = require('../database/knex')
 const AppError = require('../utils/AppError')
 
@@ -34,45 +34,44 @@ class BillsControllers {
 
     async update(request, response) {
         const {id} = request.params
-        console.log(id)
-
         const {
             newTitle,
             newDescription,
             newValue
         } = request.body
-        
+        const clock = new Date()
+        const newUpdatedTime = ` ${clock.getHours()}:${clock.getMinutes()}:${clock.getSeconds()}, ${clock.getFullYear()}`
         if(newTitle){
             try{
                 await knex('bills')
                 .where({id : id})
                 .update({
                     title : newTitle,
+                    updated_at : knex.date()
                 })
             } catch (err){
                 console.error(err)
             }
-            
         } 
-
         if(newDescription){
             try{
                 await knex('bills')
                 .where({id})
                 .update({
                     description : newDescription,
+                    updated_at : newUpdatedTime
                 }) 
             } catch (err){
                 console.error(err)
             }     
-        }
-        
+        } 
         if(newValue){
             try {//treatment of errors
                 await knex('bills')
                 .where({id})
                 .update({
                     value : newValue,
+                    updated_at : newUpdatedTime
                 })
             } catch (err){
                 console.error(err)
