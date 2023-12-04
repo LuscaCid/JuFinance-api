@@ -42,21 +42,17 @@ class UserControllers{
         
         return response.status(200).json({message : "Usuário atualizado com sucesso"})
     }
-    cardSharing = async (req, res) => {//thats will send an invitation
-        const {email_to, card_id} = req.body
+    cardInvitation = async (req, res) => {//thats will send an invitation
+        const {email_to, card_id, message} = req.body
         const user_id = req.user.id 
         //verify if this email exists
         
         const userRepository = new UserRepository()
         const userShareService = new UserShareServices(userRepository)
 
-        userShareService.execute(user_id, {email_to, card_id})
+        await userShareService.execute({user_id ,email_to, card_id, message})
 
-        try{
-                const userExists = await knexfile()
-        } catch (error){
-
-        }
+        return res.status(200).json({message : 'enviado!'})
     }
 }
 

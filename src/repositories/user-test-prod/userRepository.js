@@ -24,13 +24,13 @@ class UserRepository {
 
     //utilizando o conceito de factory juntamente com inversao de injecao de dependencias
     
-    sendInvitation = async ({user, card_id}) => {
-        console.log(user)
+    sendInvitation = async ({user_id, guest_id, card_id}) => {//vai aparecer para o outro usuario
         try{
-            await knex('cards_has_users')
+            await knex('invitations')
             .insert({
                 card_id,
-                user_id : user.id
+                guest_id,
+                inviter_id : user_id,
             }).then(() => {
                 return "ok"
             })
@@ -38,9 +38,6 @@ class UserRepository {
             return console.error(e)
         }
     }
-    
-    
-    
     async update({
         user_id,
         newName,
