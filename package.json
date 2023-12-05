@@ -6,7 +6,8 @@
   "scripts": {
     "migrate": "npx knex migrate:latest",
     "start": "",
-    "dev": "nodemon ./src/index.js"
+    "dev": "nodemon ./src/index.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
