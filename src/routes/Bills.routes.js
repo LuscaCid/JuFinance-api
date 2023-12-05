@@ -10,6 +10,8 @@ const ensureAuthenticated = new EnsureAuth()
 
 const BillsRoutes = express()
 
+BillsRoutes.use(ensureAuthenticated.EnsureAuthenticated)
+
 BillsRoutes.use(express.json())
 
 BillsRoutes.get('/show', ensureAuthenticated.EnsureAuthenticated, billsControllers.showAll)

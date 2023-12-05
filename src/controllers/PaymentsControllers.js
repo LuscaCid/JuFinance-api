@@ -3,61 +3,75 @@ const AppError = require('../utils/AppError')
 
 class PaymentsControllers {
     
-    
-    
     debitPay = async (request, response) => {
+        
         const user_id = request.user.id
         const {
             card_id, //id do cartao para debitar dele
             bill_id 
         } = request.body
 
+        async function debit({finalValue}){
+            const fixedNum = finalValue.toFixed(2)// its obviously an number
+            try{
+                await knex('cards')
+                .where({id : card_id})
+                .update({
+                    balance : fixedNum
+                })
+                .then(async () => {
+                    const payment_id = await knex('payments')
+                    .insert({
+                        bill_id : bill_id,
+                        payment_method : "DEBIT"
+                    })
+                    await knex('last_payments')
+                    .insert({
+                        user_id : user_id,
+                        payment_id
+                    })
+                    
+                    return response.status(200).json({message : `Novo valor na conta ${fixedNum}`})
+                })
+                  
+            } catch (error) {
+                throw console.error(error)
+            }
+            
+        }
+        const errorTransaction = (response) => {
+            return response.status(401).json({
+                message : "saldo insuficiente"
+            })
+        }
+
         try{
-            const thisUserHasThisCard = await knex('users_has_cards')
+            const thisUserHasThisCard = await knex('cards_has_users')
             .where({user_id, card_id})
             .first()
 
             if(!thisUserHasThisCard)throw new AppError("Este usuário nao possui este cartao", 401)
-
-            const valueInsideOfCard = await knex('cards')
+            //security method to prevent frauds
+            const {balance} = await knex('cards')
             .select('balance')
-            .where({card_id})
+            .where({id : card_id})
             .first()
             
-            console.log("valor dentro do cartao: ",valueInsideOfCard)
+            console.log("valor dentro do cartao: ",balance)
             
-            const billValue = await knex('bills')
-            .select(['value', 'name'])
+            const {value} = await knex('bills')
+            .select("value")
             .where({id : bill_id})
-            .innerJoin('users', "bills.created_by", "users.id")
-            
-            console.log("valor da conta: ",billValue)
+            .first()
+            console.log("valor da conta: ",value)
 
-            const finalValue = Number(valueInsideOfCard) - Number(billValue)
+            const finalValue = Number(balance) - Number(value)
             const isPayable = finalValue > 0 
-            
-            isPayable ? debit() : errorTransaction(response) // we can make an payment, we do it
+            //at debit, so, we have to check if this card haves money enough to do that
+            isPayable ? await debit({finalValue}) : errorTransaction(response) // we can make an payment, we do it
 
-            async function debit(){
-                try{
-                    await knex('cards')
-                    .where({card_id})
-                    .update({
-                        balance : finalValue
-                    })
-                } catch (error) {
-                    throw console.error(error)
-                }
-                
-            }
-            const errorTransaction = (response) => {
-                return response.status(401).json({
-
-                })
-            }
-            return 
         } catch (error) {
-            throw console.error(error)
+            throw new AppError(`${error}`, 500)
         }
 
     }

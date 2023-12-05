@@ -63,7 +63,7 @@ class CardsControllers {
         const user_id = req.user.id
 
         const allCards = await knex('cards_has_users')
-        .select(["user_id", "card_id"])
+        .select('*')
         .where({user_id})
         .innerJoin('cards', "cards.created_by", "cards_has_users.user_id")
         .orderBy('card_name')

@@ -2,6 +2,6 @@
     "editor.cursorBlinking": "smooth",
     "editor.cursorSurroundingLines": 10000,
     "editor.cursorSmoothCaretAnimation": "on",
-    "terminal.integrated.cursorWidth": 100,
+    "terminal.integrated.cursorWidth": 1,
     "editor.cursorStyle": "line"
 }

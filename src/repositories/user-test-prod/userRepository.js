@@ -47,6 +47,7 @@ class UserRepository {
     }){
         const updateName = async () => {
             try{
+                console.log(newName)
                 await knex('users')
                 .where({id : user_id})
                 .update({name : newName})
