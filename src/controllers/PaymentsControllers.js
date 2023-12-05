@@ -2,6 +2,9 @@ const knex = require('../database/knex')
 const AppError = require('../utils/AppError')
 
 class PaymentsControllers {
+    
+    
+    
     debitPay = async (request, response) => {
         const user_id = request.user.id
         const {
@@ -16,7 +19,7 @@ class PaymentsControllers {
 
             if(!thisUserHasThisCard)throw new AppError("Este usuário nao possui este cartao", 401)
 
-            const  valueInsideOfCard = await knex('cards')
+            const valueInsideOfCard = await knex('cards')
             .select('balance')
             .where({card_id})
             .first()
@@ -30,11 +33,31 @@ class PaymentsControllers {
             
             console.log("valor da conta: ",billValue)
 
+            const finalValue = Number(valueInsideOfCard) - Number(billValue)
+            const isPayable = finalValue > 0 
+            
+            isPayable ? debit() : errorTransaction(response) // we can make an payment, we do it
 
-            const isPayable = Number(valueInsideOfCard) -
-            await knex()
+            async function debit(){
+                try{
+                    await knex('cards')
+                    .where({card_id})
+                    .update({
+                        balance : finalValue
+                    })
+                } catch (error) {
+                    throw console.error(error)
+                }
+                
+            }
+            const errorTransaction = (response) => {
+                return response.status(401).json({
+
+                })
+            }
+            return 
         } catch (error) {
-
+            throw console.error(error)
         }
 
     }

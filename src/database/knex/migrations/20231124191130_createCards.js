@@ -7,4 +7,5 @@ exports.up = knex => knex.schema.createTable('cards', table => {
     table.integer('created_by').references('id').inTable('users')
 })
 
+
 exports.down = knex => knex.schema.dropTable('cards')
