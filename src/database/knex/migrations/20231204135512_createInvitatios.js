@@ -6,5 +6,4 @@ exports.up = knex => knex.schema.createTable('invitations', (table) => {
     table.text('message')
 })
 
-
 exports.down = knex => knex.schema.dropTable('invitations')

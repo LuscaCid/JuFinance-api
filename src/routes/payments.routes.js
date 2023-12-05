@@ -9,6 +9,6 @@ const paymentsRoutes = express()
 
 paymentsRoutes.use(express.json())
 
-paymentsRoutes.post('/pay', ensureAuth.EnsureAuthenticated, paymentsControllers.pay)
+paymentsRoutes.post('/debitpay', ensureAuth.EnsureAuthenticated, paymentsControllers.debitPay)
 
 module.exports =paymentsRoutes
