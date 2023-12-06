@@ -24,11 +24,12 @@ class UserRepository {
 
     //utilizando o conceito de factory juntamente com inversao de injecao de dependencias
     
-    sendInvitation = async ({user_id, guest_id, card_id}) => {//vai aparecer para o outro usuario
+    sendInvitation = async ({user_id, guest_id,card_id , message}) => {//vai aparecer para o outro usuario
         try{
             await knex('invitations')
             .insert({
                 card_id,
+                message,
                 guest_id,
                 inviter_id : user_id,
             }).then(() => {

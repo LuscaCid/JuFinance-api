@@ -4,6 +4,7 @@ const UserUpdateServices = require('../services/UserUpdateService')
 const UserShareServices = require('../services/userShareService')
 const UserRepository = require('../repositories/user-test-prod/userRepository')
 const UserRepositoryArray = require('../repositories/user-test-prod/UserRepositoryArray')
+const knex = require('../database/knex')
 
 
 
@@ -54,6 +55,51 @@ class UserControllers{
 
         return res.status(200).json({message : 'enviado!'})
     }
+
+    viewInvites = async function(request, response){
+        const user_id = request.user.id
+
+        const inv = await knex("invitations")
+        .select('*')
+        .where({guest_id : user_id})
+        .innerJoin('users',  "users.id", 'invitations.inviter_id')
+
+        return response.json(inv)
+    }
+
+    cardAcceptInvitation = async (request, response) => {
+        const user_id = request.user.id
+        const {
+            invitation_id,
+            isAccept
+        } = request.body
+
+        //accpet and decline functions
+
+        async function accept(card_id){
+            await knex('invitations')
+            .where({id : invitation_id})
+            .update({status : "ACCEPTED"})
+            .then(() => console.log('okay'))
+            await knex('cards_has_users')
+            .insert({
+                user_id : user_id,
+                card_id : card_id
+            })
+        }
+
+        async function decline(){
+            await knex('invitations')
+            .where({id : invitation_id})
+            .update({status : "DECLINED"})
+            .then(() => console.log('okay'))
+        }
+
+        isAccept ? await accept(card_id) : await decline()
+    }
+
 }
 
 module.exports = UserControllers
+
+//send invitation, accept, decline

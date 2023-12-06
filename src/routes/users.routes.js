@@ -10,6 +10,9 @@ const userRoutes = express()
 
 userRoutes.use(express.json())
 
+userRoutes.get('/myinvites', ensureAuth.EnsureAuthenticated, userControllers.viewInvites)
+
+userRoutes.post('/invite', ensureAuth.EnsureAuthenticated, userControllers.cardInvitation)
 
 userRoutes.put('/update', ensureAuth.EnsureAuthenticated,userControllers.update)
 

@@ -10,12 +10,8 @@ paymentsRoutes.use(express.json())
 paymentsRoutes.use(ensureAuth.EnsureAuthenticated)
 
 
-paymentsRoutes.get('/test', (req, res) => (res.send("tested")))
-
-paymentsRoutes.post('/testi', (req, res) => (res.send("tested")))
-
 paymentsRoutes.post('/master', paymentsControllers.debitPay)
 
-paymentsRoutes.post('/debit', paymentsControllers.debitPay)
+
 
 module.exports = paymentsRoutes

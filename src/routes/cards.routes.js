@@ -9,16 +9,19 @@ const cardsControllers = new CardsControllers()
  * acima as importacoes instancias...
  */
 cardsRoutes.use(express.json())
+cardsRoutes.use(ensureAuth.EnsureAuthenticated)
 
-cardsRoutes.get('/owners', ensureAuth.EnsureAuthenticated, cardsControllers.owners)//add new owners to an card
+cardsRoutes.get('/owners', cardsControllers.owners)//add new owners to an card
 //sent a invite and after, if the other user accepts, he receives the card
-cardsRoutes.post('/create', ensureAuth.EnsureAuthenticated, cardsControllers.create)
+cardsRoutes.post('/create', cardsControllers.create)
 
-cardsRoutes.get('/view', ensureAuth.EnsureAuthenticated, cardsControllers.viewAll)
+cardsRoutes.get('/view', cardsControllers.viewAll)
 
-cardsRoutes.delete('/delete', ensureAuth.EnsureAuthenticated, cardsControllers.delete)
+cardsRoutes.get('/viewinside', cardsControllers.especifiedInfo)
 
-cardsRoutes.put('/update/:card', ensureAuth.EnsureAuthenticated, cardsControllers.update)
+cardsRoutes.delete('/delete', cardsControllers.delete)
+
+cardsRoutes.put('/update/:card', cardsControllers.update)
 
 module.exports = cardsRoutes
 

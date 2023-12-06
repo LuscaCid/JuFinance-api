@@ -7,6 +7,7 @@ class UserShareService{
     //execute the sharing function
     execute = async ({user_id ,email_to, card_id, message}) => {
         const user = await this.userRepository.findByEmail(email_to)
+        console.log(user)
         if(!user && user.id !== user_id)throw new AppError('Este usuário não está cadastrado!')
         
         const guest_id = user.id

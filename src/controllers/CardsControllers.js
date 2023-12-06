@@ -55,17 +55,32 @@ class CardsControllers {
                 card_id : cardId 
             })
         } catch(err) {
-            console.error('error : ',err)
+            throw console.error('error : ',err)
         }
+    }
+
+    especifiedInfo = async (req, res) => {//all card info and owners
+        const user_id = req.user.id
+        const {card_id} = req.body
+        const allCardInfo = await knex('cards')
+        .select('*')
+        .where({id : card_id})
+        .innerJoin('cards_has_users as chu', "chu.card_id", "cards.id")
+        .first()
+
+        if(allCardInfo.id !== user_id)throw new AppError('Este usuário não possui este cartão.')
+
+        return res.status(200).json(allCardInfo)
     }
 
     viewAll  = async (req, res) => {//sera possivel ter cartoes compartilhados dentro da aplicacao, contas tambem
         const user_id = req.user.id
 
         const allCards = await knex('cards_has_users')
-        .select('*')
+        .select(["name as created_by", "card_name", "user_id", "balance"])
         .where({user_id})
         .innerJoin('cards', "cards.created_by", "cards_has_users.user_id")
+        .innerJoin('users', "cards.created_by", "users.id")
         .orderBy('card_name')
 
         return res.status(200).json(allCards)

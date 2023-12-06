@@ -18,22 +18,15 @@ class PaymentsControllers {
                 .where({id : card_id})
                 .update({
                     balance : fixedNum
-                })
+                })//after we have to update the status of bill
                 .then(async () => {
                     const [payment_id] = await knex('payments')
                     .insert({
                         bill_id : bill_id,
-                        payment_method : "DEBIT"
+                        payment_method : "DÉBITO"
                     })
 
-                    await knex('last_payments')
-                    .insert({
-                        user_id : user_id,
-                        payment_id : payment_id
-                    })
-                    console.log(payment_id)
-                    
-                    return response.status(200).json({message : `Novo valor na conta ${fixedNum}`})
+                    return response.status(200).json({message : `Novo valor na conta ${fixedNum}`, payment_id})
                 })
                   
             } catch (error) {
